@@ -1,7 +1,8 @@
 module Main exposing (main)
 
 import Browser
-import Html exposing (Html)
+import Html exposing (Html, button, div)
+import Html.Events as E
 import Svg exposing (Svg, svg)
 import Svg.Attributes as SA
 
@@ -71,17 +72,23 @@ move dx dy model =
 
 view : Model -> Html Msg
 view model =
-    svg
-        [ SA.viewBox "0 0 400 200"
-        , SA.width "400"
-        , SA.height "200"
+    div []
+        [ button [ E.onClick Up ] [ Html.text "UP" ]
+        , button [ E.onClick Down ] [ Html.text "DOWN" ]
+        , button [ E.onClick Left ] [ Html.text "LEFT" ]
+        , button [ E.onClick Right ] [ Html.text "RIGHT" ]
+        , svg
+            [ SA.viewBox "0 0 400 200"
+            , SA.width "400"
+            , SA.height "200"
+            ]
+            (List.singleton <| showBlock model)
         ]
-        (List.singleton (showBlock model))
 
 
 showBlock : Model -> Svg msg
 showBlock model =
-    Svg.rect
+    Svg.text_
         [ SA.width "20"
         , SA.height "20"
         , SA.x (String.fromInt <| model.x * 20)
