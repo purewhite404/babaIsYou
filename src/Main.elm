@@ -48,6 +48,10 @@ update msg model =
     maybeToList (Maybe.map (Block.move x y) (Block.takeBaba model)) ++ Block.dropBaba model
 
 
+
+-- maybeのsingleton,汎用的な関数がありそうなので見つけ次第そっちを使う
+
+
 maybeToList : Maybe a -> List a
 maybeToList m =
     case m of
