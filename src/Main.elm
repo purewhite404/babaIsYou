@@ -1,35 +1,20 @@
 module Main exposing (main)
 
+import Block exposing (Block)
 import Browser
 import Html exposing (Html, button, div)
 import Html.Events as E
+import Model exposing (Model)
 import Svg exposing (Svg, svg)
 import Svg.Attributes as SA
 
 
 main =
     Browser.sandbox
-        { init = init
+        { init = Model.init
         , update = update
         , view = view
         }
-
-
-
--- Model
-
-
-type alias Model =
-    Block
-
-
-type alias Block =
-    { x : Int, y : Int, name : String }
-
-
-init : Model
-init =
-    { x = 5, y = 5, name = "Baba" }
 
 
 
@@ -45,25 +30,32 @@ type Msg
 
 update : Msg -> Model -> Model
 update msg model =
-    model
-        |> (case msg of
+    let
+        ( x, y ) =
+            case msg of
                 Up ->
-                    move 0 -1
+                    ( 0, -1 )
 
                 Down ->
-                    move 0 1
+                    ( 0, 1 )
 
                 Left ->
-                    move -1 0
+                    ( -1, 0 )
 
                 Right ->
-                    move 1 0
-           )
+                    ( 1, 0 )
+    in
+    maybeToList (Maybe.map (Block.move x y) (Block.takeBaba model)) ++ Block.dropBaba model
 
 
-move : Int -> Int -> Model -> Model
-move dx dy model =
-    { model | x = model.x + dx, y = model.y + dy }
+maybeToList : Maybe a -> List a
+maybeToList m =
+    case m of
+        Just x ->
+            [ x ]
+
+        Nothing ->
+            []
 
 
 
@@ -82,16 +74,21 @@ view model =
             , SA.width "400"
             , SA.height "200"
             ]
-            (List.singleton <| showBlock model)
+            (showBlocks model)
         ]
 
 
-showBlock : Model -> Svg msg
-showBlock model =
+showBlocks : Model -> List (Svg msg)
+showBlocks =
+    List.map showBlock
+
+
+showBlock : Block -> Svg msg
+showBlock block =
     Svg.text_
         [ SA.width "20"
         , SA.height "20"
-        , SA.x (String.fromInt <| model.x * 20)
-        , SA.y (String.fromInt <| model.y * 20)
+        , SA.x (String.fromInt <| block.x * 20)
+        , SA.y (String.fromInt <| block.y * 20)
         ]
-        [ Svg.text model.name ]
+        [ Svg.text block.name ]
