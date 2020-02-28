@@ -5,6 +5,10 @@ type alias Block =
     { x : Int, y : Int, name : String }
 
 
+
+-- ブロックのリストからBABAと書かれたブロックだけ取り出す
+
+
 takeBaba : List Block -> Maybe Block
 takeBaba list =
     case list of
@@ -17,6 +21,10 @@ takeBaba list =
 
         [] ->
             Nothing
+
+
+
+-- ブロックのリストからBABAと書かれたブロックだけ除く
 
 
 dropBaba : List Block -> List Block
